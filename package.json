@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --https --port 8080",
-    "postinstall": "sh install_cert.sh",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "date-fns": "^2.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
