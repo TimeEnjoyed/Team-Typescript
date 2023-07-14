@@ -5,9 +5,11 @@ import { TDeadline } from "../types";
 
 import "./Deadline.css";
 
-type Props = TDeadline;
+type Props = TDeadline & {
+  deleteMe: VoidFunction;
+};
 
-const Deadline: React.FC<Props> = ({ title, timestamp }) => {
+const Deadline: React.FC<Props> = ({ title, timestamp, deleteMe }) => {
   const cleanTimestamp = new Date(timestamp);
   const [timeDistance, setTimeDistance] = useState(
     formatDistanceToNowStrict(cleanTimestamp, { addSuffix: true })
@@ -24,6 +26,13 @@ const Deadline: React.FC<Props> = ({ title, timestamp }) => {
   return (
     <li className={classNames("Deadline", { isPast: isPast(cleanTimestamp) })}>
       {title} {timeDistance}
+      <button
+        className="delete"
+        onClick={deleteMe}
+        aria-label={`Delete deadline ${title}`}
+      >
+        🚮
+      </button>
     </li>
   );
 };

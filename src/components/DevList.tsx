@@ -80,7 +80,7 @@ export const DevList = () => {
       }
       return {
         ...state,
-        deadlines: state.deadlines.filter((deadline) => deadline.id === id),
+        deadlines: state.deadlines.filter((deadline) => deadline.id !== id),
       };
     });
   }

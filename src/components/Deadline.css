@@ -5,3 +5,7 @@
 .Deadline.isPast {
   color: red;
 }
+
+.Deadline .delete {
+  padding: 0;
+}

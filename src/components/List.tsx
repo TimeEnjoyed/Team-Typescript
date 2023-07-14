@@ -19,7 +19,7 @@ type State =
       state: "normal";
     };
 
-const List: React.FC<Props> = ({ deadlines, addDeadline }) => {
+const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
   const [state, setState] = useState<State>({ state: "normal" });
   if (state.state === "addingDeadline") {
     return (
@@ -42,7 +42,11 @@ const List: React.FC<Props> = ({ deadlines, addDeadline }) => {
         {deadlines
           .sort((a, b) => a.timestamp - b.timestamp)
           .map((deadline) => (
-            <Deadline key={deadline.id} {...deadline} />
+            <Deadline
+              key={deadline.id}
+              {...deadline}
+              deleteMe={() => removeDeadline(deadline.id)}
+            />
           ))}
       </ul>
     </div>
