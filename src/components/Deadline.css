@@ -1,0 +1,7 @@
+.Deadline {
+  color: green;
+}
+
+.Deadline.isPast {
+  color: red;
+}

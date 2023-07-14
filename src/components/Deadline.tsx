@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import classNames from "classnames";
 import { formatDistanceToNowStrict, isPast } from "date-fns";
+import React, { useEffect, useState } from "react";
 import { TDeadline } from "../types";
+
+import "./Deadline.css";
 
 type Props = TDeadline;
 
-const Deadline: React.FC<Props> = ({ id, title, timestamp }) => {
-  const [timeDistance, setTimeDistance] = useState("");
+const Deadline: React.FC<Props> = ({ title, timestamp }) => {
   const cleanTimestamp = new Date(timestamp);
+  const [timeDistance, setTimeDistance] = useState(
+    formatDistanceToNowStrict(cleanTimestamp, { addSuffix: true })
+  );
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeDistance(
@@ -14,18 +19,12 @@ const Deadline: React.FC<Props> = ({ id, title, timestamp }) => {
       );
     }, 500); // clearing interval
     return () => clearInterval(timer);
-  });
+  }, [timestamp]);
 
   return (
-    <React.Fragment key={id}>
-      <li
-        style={{
-          color: `${isPast(cleanTimestamp) ? "red" : "green"}`,
-        }}
-      >
-        {title} {timeDistance ? timeDistance : "...loading"}
-      </li>
-    </React.Fragment>
+    <li className={classNames("Deadline", { isPast: isPast(cleanTimestamp) })}>
+      {title} {timeDistance}
+    </li>
   );
 };
 

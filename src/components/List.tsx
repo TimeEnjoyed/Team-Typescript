@@ -1,23 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import Deadline from "./Deadline";
+import { AddDeadline } from "./AddDeadline";
 import type { TDeadline } from "../types";
+
+import "./List.css";
 
 type Props = {
   deadlines: TDeadline[];
+  addDeadline: (args: { title: string; timestamp: number }) => void;
+  removeDeadline: (id: number) => void;
 };
 
-const List: React.FC<Props> = ({ deadlines }) => {
-  if (deadlines.length === 0) {
-    return "no deadlines";
+type State =
+  | {
+      state: "addingDeadline";
+    }
+  | {
+      state: "normal";
+    };
+
+const List: React.FC<Props> = ({ deadlines, addDeadline }) => {
+  const [state, setState] = useState<State>({ state: "normal" });
+  if (state.state === "addingDeadline") {
+    return (
+      <AddDeadline
+        addDeadline={(deadline) => {
+          addDeadline(deadline);
+          setState({
+            state: "normal",
+          });
+        }}
+      />
+    );
   }
   return (
-    <ul>
-      {deadlines
-        .sort((a, b) => a.timestamp - b.timestamp)
-        .map((deadline) => (
-          <Deadline {...deadline} />
-        ))}
-    </ul>
+    <div>
+      <button onClick={() => setState({ state: "addingDeadline" })}>
+        Add new deadline
+      </button>
+      <ul className="DeadlineList">
+        {deadlines
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map((deadline) => (
+            <Deadline key={deadline.id} {...deadline} />
+          ))}
+      </ul>
+    </div>
   );
 };
 
