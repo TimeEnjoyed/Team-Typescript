@@ -1,10 +1,3 @@
-import type { ICreateDeadline, IDeadline } from "../interfaces";
-
-// FIXME: remove these in prod
-const EXTENSION_NAME = import.meta.env.VITE_EXTENSION_NAME;
-const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-const API_SECRET = import.meta.env.VITE_API_SECRET;
-
 /**
  * Creates deadline
  */

@@ -51,7 +51,7 @@ export const DevList = () => {
     }, 1000);
     return () => {
       clearTimeout(timeout);
-    };
+ 1  };
   }, []);
   function addDeadline(
     createDeadline: Pick<TCreateDeadline, "title" | "timestamp">
