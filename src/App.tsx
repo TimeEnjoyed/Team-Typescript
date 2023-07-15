@@ -9,6 +9,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 const darkTheme = createTheme({
   palette: {
@@ -32,8 +34,9 @@ function App() {
     <>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <CssBaseline enableColorScheme />
-
-        {mode === "dev" ? <DevList /> : <TwitchList setTheme={setTheme} />}
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          {mode === "dev" ? <DevList /> : <TwitchList setTheme={setTheme} />}
+        </LocalizationProvider>
       </ThemeProvider>
     </>
   );
