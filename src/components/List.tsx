@@ -37,6 +37,9 @@ const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
             state: "normal",
           });
         }}
+        cancel={() => {
+          setState({ state: "normal" });
+        }}
       />
     );
   }

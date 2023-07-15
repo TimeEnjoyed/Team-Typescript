@@ -5,9 +5,10 @@ import "./AddDeadline.css";
 
 type Props = {
   addDeadline: (args: { title: string; timestamp: number }) => void;
+  cancel: VoidFunction;
 };
 
-export const AddDeadline: React.FC<Props> = ({ addDeadline }) => {
+export const AddDeadline: React.FC<Props> = ({ addDeadline, cancel }) => {
   const [localNow] = useState<string>(() => {
     return format(new Date(), "yyyy-MM-dd'T'HH:mm");
   });
@@ -22,7 +23,11 @@ export const AddDeadline: React.FC<Props> = ({ addDeadline }) => {
         ]) as { title: string; timestamp: string };
         addDeadline({
           title,
-          timestamp: parse(timestamp, "yyyy-MM-dd'T'HH:mm", new Date()).getTime(),
+          timestamp: parse(
+            timestamp,
+            "yyyy-MM-dd'T'HH:mm",
+            new Date()
+          ).getTime(),
         });
       }}
     >
@@ -35,6 +40,7 @@ export const AddDeadline: React.FC<Props> = ({ addDeadline }) => {
         <input name="timestamp" type="datetime-local" defaultValue={localNow} />
       </label>
       <input type="submit" value="Create deadline" />
+      <button onClick={cancel}>Go back</button>
     </form>
   );
 };
