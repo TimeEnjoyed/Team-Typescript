@@ -2,9 +2,15 @@ import { useEffect, useState } from "react";
 import List from "./List";
 import type { TDeadline } from "../types";
 import { add } from "date-fns";
+import CircularProgress from "@mui/material/CircularProgress";
+import Container from "@mui/material/Container";
 
 type Config = {
   deadlines: TDeadline[];
+};
+
+type Props = {
+  setTheme: (theme: "light" | "dark") => void;
 };
 
 const configVersion = "3";
@@ -15,29 +21,52 @@ function setBroadcasterConfig(config: Config) {
     JSON.stringify(config)
   );
 }
+function updateConfig(setConfig: (config: Config) => void): void {
+  console.log("got config", Twitch.ext.configuration.broadcaster);
+  if (Twitch.ext.configuration.broadcaster?.version === configVersion) {
+    setConfig(
+      JSON.parse(Twitch.ext.configuration.broadcaster.content) as Config
+    );
+  } else {
+    const initialDeadline: TDeadline = {
+      id: 1,
+      title: "End of CodeJam!!",
+      creatorId: "abcde",
+      timestamp: add(Date.now(), { seconds: 15 }).getTime(),
+    };
+    const newConfig = { deadlines: [initialDeadline] };
+    setBroadcasterConfig(newConfig);
+    setConfig(newConfig);
+  }
+}
 
-export const TwitchList = () => {
+export const TwitchList: React.FC<Props> = ({ setTheme }) => {
   const [config, setConfig] = useState<Config>();
   useEffect(() => {
     Twitch.ext.configuration.onChanged(() => {
-      console.log("got config", Twitch.ext.configuration.broadcaster);
-      if (Twitch.ext.configuration.broadcaster?.version === configVersion) {
-        setConfig(
-          JSON.parse(Twitch.ext.configuration.broadcaster.content) as Config
-        );
-      } else {
-        const initialDeadline: TDeadline = {
-          id: 1,
-          title: "End of CodeJam!!",
-          creatorId: "abcde",
-          timestamp: add(Date.now(), { seconds: 15 }).getTime(),
-        };
-        const newConfig = { deadlines: [initialDeadline] };
-        setBroadcasterConfig(newConfig);
-        setConfig(newConfig);
+      console.log("configuration.onChanged");
+      updateConfig(setConfig);
+    });
+    Twitch.ext.onError((error) => {
+      console.error("twitch ext API error", error);
+    });
+    Twitch.ext.onContext((ctx) => {
+      if (ctx.theme) {
+        console.log("updated theme", ctx.theme);
+        setTheme(ctx.theme);
       }
     });
-  }, []);
+  }, [setTheme]);
+  useEffect(() => {
+    // For some reason, sometimes the Twitch.ext.configuration.onChanged never fires...
+    const timeout = setTimeout(() => {
+      if (!config) {
+        console.log("trying to set config");
+        updateConfig(setConfig);
+      }
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [config]);
 
   const handleAddDeadline = ({
     title,
@@ -76,7 +105,11 @@ export const TwitchList = () => {
   };
 
   if (!config) {
-    return <>...Loading</>;
+    return (
+      <Container maxWidth="sm">
+        <CircularProgress />
+      </Container>
+    );
   }
 
   return (

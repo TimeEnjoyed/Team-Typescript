@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import Deadline from "./Deadline";
 import { AddDeadline } from "./AddDeadline";
-import type { TDeadline } from "../types";
+import Tooltip from "@mui/material/Tooltip";
 
-import "./List.css";
+import type { TDeadline } from "../types";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+
+import MuiList from "@mui/material/List";
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 type Props = {
   deadlines: TDeadline[];
@@ -34,11 +41,24 @@ const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
     );
   }
   return (
-    <div>
-      <button onClick={() => setState({ state: "addingDeadline" })}>
-        Add new deadline
-      </button>
-      <ul className="DeadlineList">
+    <Box sx={{ maxWidth: 480 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography variant="h3" component="h1" sx={{ m: 2 }}>
+          Deadliner
+        </Typography>
+        <Tooltip title="Add new deadline">
+          <Fab
+            aria-label="Add new deadline"
+            onClick={() => setState({ state: "addingDeadline" })}
+            size="small"
+            sx={{ m: 2 }}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+      </Stack>
+
+      <MuiList>
         {deadlines
           .sort((a, b) => a.timestamp - b.timestamp)
           .map((deadline) => (
@@ -48,8 +68,8 @@ const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
               deleteMe={() => removeDeadline(deadline.id)}
             />
           ))}
-      </ul>
-    </div>
+      </MuiList>
+    </Box>
   );
 };
 

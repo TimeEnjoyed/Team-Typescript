@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import List from "./List";
-import { add, sub } from "date-fns";
+import { add } from "date-fns";
 import { TCreateDeadline, TDeadline } from "../types";
 
 type State =
@@ -24,15 +24,15 @@ export const DevList = () => {
         deadlines: [
           {
             id: 1,
-            title: "end of codejam",
+            title: "expired",
             creatorId: "abcde",
             timestamp: now.getTime(),
           },
           {
             id: 2,
-            title: "1 min in future",
+            title: "Soon (1 hour)",
             creatorId: "abcde",
-            timestamp: add(now, { minutes: 1 }).getTime(),
+            timestamp: add(now, { hours: 1 }).getTime(),
           },
           {
             id: 3,
@@ -40,18 +40,13 @@ export const DevList = () => {
             creatorId: "abcde",
             timestamp: add(now, { years: 1 }).getTime(),
           },
-          {
-            id: 4,
-            title: "1 min expired",
-            creatorId: "abcde",
-            timestamp: sub(now, { minutes: 1 }).getTime(),
-          },
         ],
       }));
     }, 1000);
     return () => {
       clearTimeout(timeout);
- 1  };
+      1;
+    };
   }, []);
   function addDeadline(
     createDeadline: Pick<TCreateDeadline, "title" | "timestamp">
