@@ -7,18 +7,24 @@ type Config = {
   deadlines: TDeadline[];
 };
 
+const configVersion = "3";
+function setBroadcasterConfig(config: Config) {
+  Twitch.ext.configuration.set(
+    "broadcaster",
+    configVersion,
+    JSON.stringify(config)
+  );
+}
+
 export const TwitchList = () => {
   const [config, setConfig] = useState<Config>();
   useEffect(() => {
-    window.Twitch.ext.configuration.onChanged(() => {
-      const configuration = window.Twitch.ext.configuration;
-
-      console.log("broadcaster", configuration.broadcaster);
-      if (
-        configuration.broadcaster &&
-        configuration.broadcaster.version === "3"
-      ) {
-        setConfig(JSON.parse(configuration.broadcaster.content) as Config);
+    Twitch.ext.configuration.onChanged(() => {
+      console.log("got config", Twitch.ext.configuration.broadcaster);
+      if (Twitch.ext.configuration.broadcaster?.version === configVersion) {
+        setConfig(
+          JSON.parse(Twitch.ext.configuration.broadcaster.content) as Config
+        );
       } else {
         const initialDeadline: TDeadline = {
           id: 1,
@@ -26,11 +32,9 @@ export const TwitchList = () => {
           creatorId: "abcde",
           timestamp: add(Date.now(), { seconds: 15 }).getTime(),
         };
-        window.Twitch.ext.configuration.set(
-          "broadcaster",
-          "3",
-          JSON.stringify({ deadlines: [initialDeadline] })
-        );
+        const newConfig = { deadlines: [initialDeadline] };
+        setBroadcasterConfig(newConfig);
+        setConfig(newConfig);
       }
     });
   }, []);
@@ -51,28 +55,24 @@ export const TwitchList = () => {
       creatorId: "abcde",
       timestamp,
     };
-    window.Twitch.ext.configuration.set(
-      "broadcaster",
-      "3",
-      JSON.stringify({
-        ...config,
-        deadlines: [...config.deadlines, newDeadline],
-      })
-    );
+    const newConfig = {
+      ...config,
+      deadlines: [...config.deadlines, newDeadline],
+    };
+    setBroadcasterConfig(newConfig);
+    setConfig(newConfig);
   };
 
   const handleRemoveDeadline = (id: number) => {
     if (!config) {
       return;
     }
-    window.Twitch.ext.configuration.set(
-      "broadcaster",
-      "3",
-      JSON.stringify({
-        ...config,
-        deadlines: config.deadlines.filter((deadline) => deadline.id !== id),
-      })
-    );
+    const newConfig = {
+      ...config,
+      deadlines: config.deadlines.filter((deadline) => deadline.id !== id),
+    };
+    setBroadcasterConfig(newConfig);
+    setConfig(newConfig);
   };
 
   if (!config) {
@@ -80,12 +80,10 @@ export const TwitchList = () => {
   }
 
   return (
-    <>
-      <List
-        deadlines={config.deadlines}
-        addDeadline={handleAddDeadline}
-        removeDeadline={handleRemoveDeadline}
-      ></List>
-    </>
+    <List
+      deadlines={config.deadlines}
+      addDeadline={handleAddDeadline}
+      removeDeadline={handleRemoveDeadline}
+    />
   );
 };

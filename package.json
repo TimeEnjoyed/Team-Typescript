@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --https --port 8080",
+    "dev:ryan": "cross-env RYAN=true vite --https --port 8080",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
