@@ -1,0 +1,14 @@
+.Deadline .DeleteButton {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .Deadline .DeleteButton {
+    transition: opacity 0.25s;
+  }
+}
+
+.Deadline:focus-within .DeleteButton,
+.Deadline:hover .DeleteButton {
+  opacity: 1;
+}

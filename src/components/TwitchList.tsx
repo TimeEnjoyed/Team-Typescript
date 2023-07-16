@@ -5,6 +5,8 @@ import { add } from "date-fns";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 
+import Grid from "@mui/material/Grid";
+
 type Config = {
   deadlines: TDeadline[];
 };
@@ -106,9 +108,14 @@ export const TwitchList: React.FC<Props> = ({ setTheme }) => {
 
   if (!config) {
     return (
-      <Container maxWidth="sm">
-        <CircularProgress />
-      </Container>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        sx={{ marginTop: 8 }}
+      >
+        <CircularProgress size={60} />
+      </Grid>
     );
   }
 

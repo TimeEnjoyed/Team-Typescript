@@ -11,6 +11,8 @@ import { useTheme } from "@mui/material/styles";
 
 import { Typography } from "@mui/material";
 
+import "./Deadline.css";
+
 type Props = TDeadline & {
   deleteMe: VoidFunction;
 };
@@ -36,7 +38,7 @@ const Deadline: React.FC<Props> = ({ title, timestamp, deleteMe }) => {
   const isWithinADay = isBefore(cleanTimestamp, add(now, { days: 1 }));
 
   return (
-    <ListItem style={{ justifyContent: "space-between" }}>
+    <ListItem style={{ justifyContent: "space-between" }} className="Deadline">
       <Stack>
         <Typography variant="body1">{title}</Typography>
         <Typography
@@ -53,7 +55,11 @@ const Deadline: React.FC<Props> = ({ title, timestamp, deleteMe }) => {
         </Typography>
       </Stack>
       <Tooltip title={`Delete deadline ${title}`}>
-        <IconButton aria-label={`Delete deadline ${title}`} onClick={deleteMe}>
+        <IconButton
+          className="DeleteButton"
+          aria-label={`Delete deadline ${title}`}
+          onClick={deleteMe}
+        >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
