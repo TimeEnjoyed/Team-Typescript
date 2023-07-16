@@ -16,6 +16,7 @@ type Props = {
   deadlines: TDeadline[];
   addDeadline: (args: { title: string; timestamp: number }) => void;
   removeDeadline: (id: number) => void;
+  role: string;
 };
 
 type State =
@@ -26,7 +27,12 @@ type State =
       state: "normal";
     };
 
-const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
+const List: React.FC<Props> = ({
+  deadlines,
+  addDeadline,
+  removeDeadline,
+  role,
+}) => {
   const [state, setState] = useState<State>({ state: "normal" });
   if (state.state === "addingDeadline") {
     return (
@@ -49,16 +55,18 @@ const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
         <Typography variant="h3" component="h1" sx={{ m: 2 }}>
           Deadliner
         </Typography>
-        <Tooltip title="Add new deadline">
-          <Fab
-            aria-label="Add new deadline"
-            onClick={() => setState({ state: "addingDeadline" })}
-            size="small"
-            sx={{ m: 2 }}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+        {role === "broadcaster" && (
+          <Tooltip title="Add new deadline">
+            <Fab
+              aria-label="Add new deadline"
+              onClick={() => setState({ state: "addingDeadline" })}
+              size="small"
+              sx={{ m: 2 }}
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        )}
       </Stack>
 
       <MuiList>
@@ -68,6 +76,7 @@ const List: React.FC<Props> = ({ deadlines, addDeadline, removeDeadline }) => {
             <Deadline
               key={deadline.id}
               {...deadline}
+              canDelete={role === "broadcaster"}
               deleteMe={() => removeDeadline(deadline.id)}
             />
           ))}

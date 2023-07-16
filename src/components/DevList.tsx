@@ -89,6 +89,7 @@ export const DevList = () => {
       addDeadline={addDeadline}
       deadlines={state.deadlines}
       removeDeadline={removeDeadline}
+      role="broadcaster"
     />
   );
 };

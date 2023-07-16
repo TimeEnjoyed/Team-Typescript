@@ -15,9 +15,15 @@ import "./Deadline.css";
 
 type Props = TDeadline & {
   deleteMe: VoidFunction;
+  canDelete: boolean;
 };
 
-const Deadline: React.FC<Props> = ({ title, timestamp, deleteMe }) => {
+const Deadline: React.FC<Props> = ({
+  title,
+  timestamp,
+  deleteMe,
+  canDelete,
+}) => {
   const cleanTimestamp = new Date(timestamp);
   const theme = useTheme();
 
@@ -54,15 +60,17 @@ const Deadline: React.FC<Props> = ({ title, timestamp, deleteMe }) => {
           {timeDistance}
         </Typography>
       </Stack>
-      <Tooltip title={`Delete deadline ${title}`}>
-        <IconButton
-          className="DeleteButton"
-          aria-label={`Delete deadline ${title}`}
-          onClick={deleteMe}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+      {canDelete && (
+        <Tooltip title={`Delete deadline ${title}`}>
+          <IconButton
+            className="DeleteButton"
+            aria-label={`Delete deadline ${title}`}
+            onClick={deleteMe}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      )}
     </ListItem>
   );
 };

@@ -3,7 +3,6 @@ import List from "./List";
 import type { TDeadline } from "../types";
 import { add } from "date-fns";
 import CircularProgress from "@mui/material/CircularProgress";
-import Container from "@mui/material/Container";
 
 import Grid from "@mui/material/Grid";
 
@@ -124,6 +123,7 @@ export const TwitchList: React.FC<Props> = ({ setTheme }) => {
       deadlines={config.deadlines}
       addDeadline={handleAddDeadline}
       removeDeadline={handleRemoveDeadline}
+      role={Twitch.ext.viewer.role}
     />
   );
 };
